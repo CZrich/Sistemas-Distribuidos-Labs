@@ -4,7 +4,8 @@ public class CubbyHole {
     private boolean available=false;
     public synchronized int get(){
 
-        while (!available) { // espera solo si NO hay contenido disponible
+        // espera solo si NO hay contenido disponible
+        while (!available) { 
             try {
                 wait();
             } catch (InterruptedException e) {
