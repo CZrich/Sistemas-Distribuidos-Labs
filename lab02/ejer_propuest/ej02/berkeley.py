@@ -1,5 +1,3 @@
-import random
-
 def berkeley(tiempos_locales):
     #T0
     tiempo_servidor = tiempos_locales[0]
