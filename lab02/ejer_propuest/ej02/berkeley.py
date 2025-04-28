@@ -1,3 +1,5 @@
+import time
+
 def berkeley(tiempos_locales):
     #T0
     tiempo_servidor = tiempos_locales[0]
@@ -10,6 +12,7 @@ def berkeley(tiempos_locales):
     print("2. Envio de T0 a todos los clientes (C1,C2,C3)")
     print("3. El tiempo de envio son de 0.005 unidades de tiempo, esto afectara el reloj de todos")
     tiempos_locales = envio_delay(tiempos_locales)
+    time.sleep(4)
     print("4. +0.005, Nuevos tiempos: ")
     print(f"\tTs0 : {tiempos_locales[0]:.3f}")
     for i in range(1, len(tiempos_locales)):
@@ -27,10 +30,10 @@ def berkeley(tiempos_locales):
     print("6. Se comunica las diferencias al Servidor")
     print("7. Delay al enviar... +0.005 para todos")
     tiempos_locales = envio_delay(tiempos_locales)
+    time.sleep(4)
     # La respuesta de cada cliente llegara en T1
     tiempo_servidor_1 = tiempos_locales[0]
     print("8. Nuevos tiempos")
-    
     print(f"\tTs0 : {tiempos_locales[0]:.3f}")
     for i in range(1, len(tiempos_locales)):
         print(f"\tTc{i} : {tiempos_locales[i]:.3f}")
@@ -62,6 +65,7 @@ def berkeley(tiempos_locales):
     print("13. Envio del ajuste final a cada cliente")
     print("14. Delay al enviar... +0.005 para todos")
     tiempos_locales = envio_delay(tiempos_locales)
+    time.sleep(4)
     print(f"\tTs0 : {tiempos_locales[0]:.3f}")
     for i in range(1, len(tiempos_locales)):
         print(f"\tTc{i} : {tiempos_locales[i]:.3f}")
