@@ -33,7 +33,9 @@ class ClientThread(threading.Thread):
 
             # Se agrega este cliente a la lista global
             with lock:
+                
                 clients.append(self)
+                print(f"[DEBUG] Usuarios conectados: {[c.username for c in clients]}")
             
             # Bucle del hilo para recibir los mensajes
             while self.active:
@@ -48,7 +50,7 @@ class ClientThread(threading.Thread):
                         parts = msg.split(" ", 1)
                         target_user = parts[0][1:]
                         private_msg = parts[1] if len(parts) >  1 else ""
-                        send_private(f"{self.username} (privado): {private_msg}", target_user)
+                        send_private(f"{self.username} (privado): {private_msg}", target_user, self)
                     else:
                         # Para los mensajes publicos
                         broadcast(f"{self.username}: {msg}", self)
@@ -58,6 +60,7 @@ class ClientThread(threading.Thread):
                     self.send(f"Usuarios conectados a las {datetime.now().strftime('%H:%M:%S')}")
                     with lock:
                         for c in clients:
+                            print(f"[DEBUG] Enviando usuario {c.username} - conectado desde {c.start_time}")
                             self.send(f"- {c.username} desde {c.start_time}")
                 
                 elif message_obj["type"] == LOGOUT:
@@ -96,7 +99,7 @@ def broadcast(message, sender=None):
                 client.send(message)
 
 # Enviar un mensaje privado
-def send_private(message, target_username):
+def send_private(message, target_username, sender):
     found = False
     with lock:
         for client in clients:
@@ -104,7 +107,7 @@ def send_private(message, target_username):
                 client.send(message)
                 found = True   
                 break
-    if not found and sender:
+    if not found:
         sender.send("--- Usuario no encontrado ---")
 
 # Principal para el servidor

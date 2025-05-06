@@ -47,7 +47,7 @@ class Client:
 
         while True:
             msg = input("> ")
-            if msg.upper == "LOGOUT":
+            if msg.upper() == "LOGOUT":
                 self.send.message(LOGOUT, "")
                 break # Cortamos el bucle y cerramos el socket
             elif msg.upper() == "WHOISIN":
@@ -86,5 +86,6 @@ class Client:
 if __name__ == "__main__":
     # Cliente con valores por defecto
     client = Client()
+
     client.start()
         
