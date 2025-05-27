@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compras de Productos - Web Service</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+
+        .card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .card h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 3px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+
+        .catalogo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+        }
+
+        .producto-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .producto-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .producto-item h4 {
+            color: #4CAF50;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .precio {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, #45a049, #4CAF50);
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f44336, #d32f2f);
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #d32f2f, #f44336);
+        }
+
+        .lista-compras {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .item-compra {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .item-compra:last-child {
+            border-bottom: none;
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-total {
+            font-weight: bold;
+            color: #4CAF50;
+            margin-left: 10px;
+        }
+
+        .btn-eliminar {
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .total-general {
+            background: #4CAF50;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+            
+            .catalogo-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛒 Sistema de Compras</h1>
+            <p>Selecciona productos y agréga cantidad</p>
+        </div>
+
+        <div class="content">
+            <!-- Catálogo de Productos -->
+            <div class="card">
+                <h2>📋 Catálogo de Productos</h2>
+                <div id="catalogoGrid" class="catalogo-grid">
+                    <!-- Los productos se cargarán aquí dinámicamente -->
+                </div>
+            </div>
+
+            <!-- Agregar Producto -->
+            <div class="card">
+                <h2>➕ Agregar Producto</h2>
+                <form onsubmit="agregarProducto(event)">
+                    <div class="form-group">
+                        <label for="producto">Producto:</label>
+                        <select id="producto" required>
+                            <option value="">Seleccionar producto...</option>
+                            <option value="papa">Papa - $2.50</option>
+                            <option value="leche">Leche - $3.75</option>
+                            <option value="pan">Pan - $1.25</option>
+                            <option value="arroz">Arroz - $4.20</option>
+                            <option value="azucar">Azúcar - $2.80</option>
+                            <option value="aceite">Aceite - $5.50</option>
+                            <option value="huevos">Huevos - $6.00</option>
+                            <option value="pollo">Pollo - $12.50</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="cantidad">Cantidad:</label>
+                        <input type="number" id="cantidad" step="0.1" min="0.1" required>
+                    </div>
+                    <button type="submit" class="btn">Agregar a la Lista</button>
+                </form>
+
+                <!-- Lista de Compras -->
+                <div class="lista-compras">
+                    <h3>🛍️ Lista de Compras</h3>
+                    <div id="listaCompras">
+                        <p style="text-align: center; color: #666; font-style: italic;">
+                            No hay productos agregados
+                        </p>
+                    </div>
+                    <div id="totalGeneral" class="total-general" style="display: none;">
+                        TOTAL: $0.00
+                    </div>
+                </div>
+
+                <button class="btn btn-danger" onclick="limpiarLista()" style="margin-top: 15px;">
+                    Limpiar Lista
+                </button>
+                <button class="btn" onclick="finalizarCompra()" style="background: linear-gradient(135deg, #2196F3, #1976D2);">
+                    Finalizar Compra
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // URL del Web Service
+        const WS_URL = 'http://localhost:8080/WebTest/Compras';
+        
+        // Precios de productos
+        const precios = {
+            'papa': 2.50,
+            'leche': 3.75,
+            'pan': 1.25,
+            'arroz': 4.20,
+            'azucar': 2.80,
+            'aceite': 5.50,
+            'huevos': 6.00,
+            'pollo': 12.50
+        };
+
+        // Lista de compras en memoria
+        let listaCompras = [];
+
+        // Función para crear solicitud SOAP
+        function crearSolicitudSOAP(operacion, parametros) {
+            let soap = `<?xml version="1.0" encoding="UTF-8"?>
+                <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+                              xmlns:prod="http://productos/">
+                    <soap:Header/>
+                    <soap:Body>
+                        <prod:${operacion}>`;
+            
+            for (let param in parametros) {
+                soap += `<prod:${param}>${parametros[param]}</prod:${param}>`;
+            }
+            
+            soap += `</prod:${operacion}>
+                    </soap:Body>
+                </soap:Envelope>`;
+            
+            return soap;
+        }
+
+        // Función para enviar solicitud SOAP
+        async function enviarSOAP(operacion, parametros) {
+            try {
+                const soapRequest = crearSolicitudSOAP(operacion, parametros);
+                
+                const response = await fetch(WS_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'text/xml; charset=utf-8',
+                        'SOAPAction': `"${operacion}"`
+                    },
+                    body: soapRequest
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const responseText = await response.text();
+                
+                // Extraer respuesta del XML
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(responseText, "text/xml");
+                const returnElement = xmlDoc.getElementsByTagName('return')[0];
+                
+                if (returnElement) {
+                    return returnElement.textContent;
+                } else {
+                    throw new Error('No se pudo extraer la respuesta del Web Service');
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                return `Error de conexión: ${error.message}`;
+            }
+        }
+
+        // Cargar catálogo visual
+        function cargarCatalogoVisual() {
+            const catalogoGrid = document.getElementById('catalogoGrid');
+            catalogoGrid.innerHTML = '';
+            
+            for (let producto in precios) {
+                const productoDiv = document.createElement('div');
+                productoDiv.className = 'producto-item';
+                productoDiv.onclick = () => seleccionarProducto(producto);
+                
+                productoDiv.innerHTML = `
+                    <h4>${producto}</h4>
+                    <div class="precio">$${precios[producto].toFixed(2)}</div>
+                `;
+                
+                catalogoGrid.appendChild(productoDiv);
+            }
+        }
+
+        // Seleccionar producto del catálogo
+        function seleccionarProducto(producto) {
+            document.getElementById('producto').value = producto;
+            document.getElementById('cantidad').focus();
+        }
+
+        // Agregar producto a la lista
+        function agregarProducto(event) {
+            event.preventDefault();
+            
+            const producto = document.getElementById('producto').value;
+            const cantidad = parseFloat(document.getElementById('cantidad').value);
+            
+            if (!producto || !cantidad || cantidad <= 0) {
+                alert('Por favor seleccione un producto y una cantidad válida');
+                return;
+            }
+            
+            const precio = precios[producto];
+            const subtotal = cantidad * precio;
+            
+            // Verificar si el producto ya existe en la lista
+            const existente = listaCompras.find(item => item.producto === producto);
+            if (existente) {
+                existente.cantidad += cantidad;
+                existente.subtotal = existente.cantidad * existente.precio;
+            } else {
+                listaCompras.push({
+                    producto: producto,
+                    cantidad: cantidad,
+                    precio: precio,
+                    subtotal: subtotal
+                });
+            }
+            
+            actualizarListaCompras();
+            
+            // Limpiar formulario
+            document.getElementById('producto').value = '';
+            document.getElementById('cantidad').value = '';
+        }
+
+        // Actualizar la visualización de la lista de compras
+        function actualizarListaCompras() {
+            const listaDiv = document.getElementById('listaCompras');
+            const totalDiv = document.getElementById('totalGeneral');
+            
+            if (listaCompras.length === 0) {
+                listaDiv.innerHTML = `
+                    <p style="text-align: center; color: #666; font-style: italic;">
+                        No hay productos agregados
+                    </p>
+                `;
+                totalDiv.style.display = 'none';
+                return;
+            }
+            
+            let html = '';
+            let total = 0;
+            
+            listaCompras.forEach((item, index) => {
+                total += item.subtotal;
+                html += `
+                    <div class="item-compra">
+                        <div class="item-info">
+                            <strong>${item.producto.toUpperCase()}</strong><br>
+                            <small>Cantidad: ${item.cantidad} × $${item.precio.toFixed(2)}</small>
+                        </div>
+                        <div class="item-total">$${item.subtotal.toFixed(2)}</div>
+                        <button class="btn-eliminar" onclick="eliminarProducto(${index})">×</button>
+                    </div>
+                `;
+            });
+            
+            listaDiv.innerHTML = html;
+            totalDiv.innerHTML = `TOTAL: $${total.toFixed(2)}`;
+            totalDiv.style.display = 'block';
+        }
+
+        // Eliminar producto de la lista
+        function eliminarProducto(index) {
+            listaCompras.splice(index, 1);
+            actualizarListaCompras();
+        }
+
+        // Limpiar toda la lista
+        function limpiarLista() {
+            if (listaCompras.length === 0) return;
+            
+            if (confirm('¿Está seguro de que desea limpiar toda la lista?')) {
+                listaCompras = [];
+                actualizarListaCompras();
+            }
+        }
+
+        // Finalizar compra usando el Web Service
+        async function finalizarCompra() {
+            if (listaCompras.length === 0) {
+                alert('Agregue productos a la lista antes de finalizar la compra');
+                return;
+            }
+            
+            const productos = listaCompras.map(item => item.producto).join(',');
+            const cantidades = listaCompras.map(item => item.cantidad).join(',');
+            
+            const response = await enviarSOAP('calcularCompra', {
+                productos: productos,
+                cantidades: cantidades
+            });
+            
+            alert(response);
+            
+            // Opcional: limpiar lista después de finalizar
+            if (confirm('¿Desea limpiar la lista de compras?')) {
+                listaCompras = [];
+                actualizarListaCompras();
+            }
+        }
+
+        // Inicializar página
+        window.onload = function() {
+            cargarCatalogoVisual();
+        };
+    </script>
+</body>
+</html>
