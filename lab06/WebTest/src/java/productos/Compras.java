@@ -53,20 +53,18 @@ public class Compras {
         return sb.toString();
     }
     
-    /**
-     * Compra de un solo producto - CORREGIDO
-     */
+    
     @WebMethod(operationName = "comprarProducto")
     public String comprarProducto(
             @WebParam(name = "producto") String producto,
             @WebParam(name = "cantidad") double cantidad) {
         
-        // VALIDACIÓN AGREGADA: Verificar que el producto no sea null o vacío
+        
         if (producto == null || producto.trim().isEmpty()) {
             return "Error: Debe especificar un producto válido.";
         }
         
-        // Validar cantidad positiva
+       
         if (cantidad <= 0) {
             return "Lo siento, ingrese una cantidad positiva.";
         }
@@ -90,10 +88,7 @@ public class Compras {
             return "El producto '" + producto + "' no está disponible en nuestro catálogo.";
         }
     }
-    
-    /**
-     * Calcular el total de una lista de compras
-     */
+
     @WebMethod(operationName = "calcularCompra")
     public String calcularCompra(
             @WebParam(name = "productos") String productos,
