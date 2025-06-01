@@ -1,8 +1,7 @@
 package com.soap.product;
 
 
-import io.spring.guides.gs_producing_web_service.GetProductRequest;
-import io.spring.guides.gs_producing_web_service.GetProductResponse;
+import io.spring.guides.gs_producing_web_service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
@@ -29,6 +28,28 @@ public class ProductEndPoint {
 
         return response;
     }
+
+
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "AddProductRequest")
+    @ResponsePayload
+    public AddProductResponse addProduct(@RequestPayload AddProductRequest request) {
+        AddProductResponse response = new AddProductResponse();
+
+        Product newProduct = request.getProduct();
+        productRepository.saveProduct(newProduct);
+
+        response.setMessage("Producto agregado exitosamente: " + newProduct.getName());
+        return response;
+    }
+
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getAllProductsRequest")
+    @ResponsePayload
+    public GetAllProductsResponse getAllProducts(@RequestPayload   GetAllProductsRequest request) {
+        GetAllProductsResponse response = new GetAllProductsResponse();
+        response.getProduct().addAll(productRepository.findAll()); // Debes crear este método en ProductRepository
+        return response;
+    }
+
 
 
 }

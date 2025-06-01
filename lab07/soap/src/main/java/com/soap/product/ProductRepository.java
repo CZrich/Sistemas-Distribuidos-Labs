@@ -6,7 +6,9 @@ import org.springframework.stereotype.Component;
 import io.spring.guides.gs_producing_web_service.Product;
 import org.springframework.util.Assert;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -37,6 +39,15 @@ public class ProductRepository {
         Polo.setDescription("nueva edición de polos");
         Polo.setPrice(100);
         products.put(Polo.getName(),Polo);
+    }
+
+
+    public void saveProduct(Product product) {
+        Assert.notNull(product.getName(), "El nombre no puede ser nulo");
+        products.put(product.getName(), product);
+    }
+    public List<Product> findAll() {
+        return new ArrayList<>(products.values());
     }
 
     public Product findProduct(String name) {

@@ -1,0 +1,8 @@
+<AddProductRequest xmlns="http://spring.io/guides/gs-producing-web-service">
+    <product>
+        <name>Laptop</name>
+        <description>Laptop ultradelgada</description>
+        <price>2500.00</price>
+        <category>TECHNOLOGICAL</category>
+    </product>
+</AddProductRequest>
