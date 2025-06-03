@@ -1,8 +1,16 @@
-<AddProductRequest xmlns="http://spring.io/guides/gs-producing-web-service">
-    <product>
-        <name>Laptop</name>
-        <description>Laptop ultradelgada</description>
-        <price>2500.00</price>
-        <category>TECHNOLOGICAL</category>
-    </product>
-</AddProductRequest>
+
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                  xmlns:gs="http://spring.io/guides/gs-producing-web-service">
+  <soapenv:Header/>
+  <soapenv:Body>
+    <gs:AddProductRequest>
+      <gs:product>
+        <gs:name>Laptop</gs:name>
+        <gs:description>Laptop ultradelgada</gs:description>
+        <gs:price>2500.00</gs:price>
+        <gs:category>TECHNOLOGICAL</gs:category>
+      </gs:product>
+    </gs:AddProductRequest>
+  </soapenv:Body>
+</soapenv:Envelope>
+
