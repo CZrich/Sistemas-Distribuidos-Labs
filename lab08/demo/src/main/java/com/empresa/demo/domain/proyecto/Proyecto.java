@@ -1,7 +1,8 @@
-package com.empresa.demo.proyecto;
+package com.empresa.demo.domain.proyecto;
 
-import com.empresa.demo.Departamento.Departamento;
-import com.empresa.demo.contrato.Contrato;
+import com.empresa.demo.domain.contrato.Contrato;
+import com.empresa.demo.domain.departamento.Departamento;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,7 +30,7 @@ public class Proyecto {
      private Departamento departamento;
 
 
-     @OneToMany(mappedBy = "proyectos",fetch =  FetchType.LAZY)
+     @OneToMany(mappedBy = "proyectos",fetch =  FetchType.LAZY,cascade = {CascadeType.MERGE,CascadeType.PERSIST})
      private List<Contrato> contratos;
 
 }

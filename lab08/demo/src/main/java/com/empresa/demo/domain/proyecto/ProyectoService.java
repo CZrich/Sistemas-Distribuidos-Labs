@@ -1,8 +1,8 @@
-package com.empresa.demo.proyecto;
+package com.empresa.demo.domain.proyecto;
 
 
 import com.empresa.demo.exception.RequestException;
-import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -23,8 +23,8 @@ public class ProyectoService {
         return  proyectoRepository.save(proyecto);
     }
 
-   // @Transactional
-    public ResponseEntity updateProyecto(Proyecto proyecto, Long id){
+  
+    public ResponseEntity<Void> updateProyecto(Proyecto proyecto, Long id){
 
        var project= getProyecto(id);
        project.setNomProy(proyecto.getNomProy());
@@ -42,6 +42,13 @@ public class ProyectoService {
             throw  new RequestException("project no found", HttpStatus.BAD_REQUEST);
         }
         return  proyectoOpt.get();
+    }
+
+
+    public ResponseEntity<Void> deleteProyecto(Long id) {
+        var proyecto = getProyecto(id);
+        proyectoRepository.delete(proyecto);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 

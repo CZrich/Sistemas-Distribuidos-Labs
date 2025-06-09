@@ -1,4 +1,4 @@
-package com.empresa.demo.Departamento;
+package com.empresa.demo.domain.departamento;
 
 import com.empresa.demo.exception.RequestException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -16,6 +17,10 @@ public class DepartamentoService {
     private  DepartementoRepository departementoRepository;
 
 
+
+    public List<Departamento> getAllDepartamentos() {
+        return departementoRepository.findAll();
+    }
     public  Departamento creatDepartamento(Departamento departamento){
 
         return  departementoRepository.save(departamento);

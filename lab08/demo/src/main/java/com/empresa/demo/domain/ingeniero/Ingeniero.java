@@ -1,7 +1,5 @@
-package com.empresa.demo.ingeniero;
+package com.empresa.demo.domain.ingeniero;
 
-import com.empresa.demo.contrato.Contrato;
-import com.empresa.demo.proyecto.Proyecto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +7,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+
+import com.empresa.demo.domain.contrato.Contrato;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity(name = "Ingeniero")
 @Table(name = "ingeniero")
@@ -24,6 +25,7 @@ public class Ingeniero {
     private  String carIng;
     private  String espIng;
     @OneToMany(mappedBy = "ingenieros",fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Contrato> contratos;
 
 }

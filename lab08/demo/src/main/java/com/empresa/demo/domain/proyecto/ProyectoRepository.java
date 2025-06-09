@@ -1,4 +1,4 @@
-package com.empresa.demo.proyecto;
+package com.empresa.demo.domain.proyecto;
 
 
 import org.springframework.data.jpa.repository.JpaRepository;

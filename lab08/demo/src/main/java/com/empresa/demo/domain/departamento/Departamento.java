@@ -1,6 +1,4 @@
-package com.empresa.demo.Departamento;
-
-import com.empresa.demo.proyecto.Proyecto;
+package com.empresa.demo.domain.departamento;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+
+import com.empresa.demo.domain.proyecto.Proyecto;
 
 @Entity(name = "Departamento")
 @Table(name = "departamento")
@@ -24,7 +24,7 @@ public class Departamento {
     private  String nomDep;
     private String  telDep;
     private  String faxDep;
-    @OneToMany(mappedBy = "departamento",fetch = FetchType.LAZY)
 
+    @OneToMany(mappedBy = "departamento",fetch = FetchType.LAZY)
     private List<Proyecto> proyectos;
 }
