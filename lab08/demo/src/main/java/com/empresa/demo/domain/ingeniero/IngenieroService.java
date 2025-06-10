@@ -21,10 +21,13 @@ public class IngenieroService {
     public  Optional<List<Ingeniero>> getAllIngeniero(){
         return  Optional.of(ingenieroRepository.findAll());
     }
+
+
     public  Ingeniero createIngeniero(Ingeniero ingeniero){
 
         return  ingenieroRepository.save(ingeniero);
     }
+
 
     public  Ingeniero getIngeniero(Long id){
         Optional<Ingeniero> ingenieroOpt=ingenieroRepository.findById(id);
@@ -36,6 +39,8 @@ public class IngenieroService {
         return  ingenieroOpt.get();
     }
 
+
+    
     public ResponseEntity<Void> updateIngeniero(Ingeniero ingeniero,Long id){
         var  ingenieroOpt=getIngeniero(id);
 

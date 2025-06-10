@@ -48,6 +48,8 @@ public class ContratoService {
         return  contratoOpt.get();
     }
 
+    
+
     public void deleteContrato(Long id) {
         if (!contratoRepository.existsById(id)) {
             throw new RequestException("Contrato not found", HttpStatus.NOT_FOUND);

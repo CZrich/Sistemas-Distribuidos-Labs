@@ -2,6 +2,7 @@ package com.empresa.demo.domain.proyecto;
 
 import com.empresa.demo.domain.contrato.Contrato;
 import com.empresa.demo.domain.departamento.Departamento;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -27,10 +28,12 @@ public class Proyecto {
      private LocalDate terFechProy;
      @ManyToOne
      @JoinColumn(name = "departamento_id")
+     @JsonIgnore
      private Departamento departamento;
 
 
      @OneToMany(mappedBy = "proyectos",fetch =  FetchType.LAZY,cascade = {CascadeType.MERGE,CascadeType.PERSIST})
+     @JsonIgnore
      private List<Contrato> contratos;
 
 }

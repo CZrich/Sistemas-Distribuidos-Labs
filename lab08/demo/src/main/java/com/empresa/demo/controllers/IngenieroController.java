@@ -1,5 +1,7 @@
 package com.empresa.demo.controllers;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +31,11 @@ public class IngenieroController {
         this.ingenieroService = ingenieroService;
     }
     
-    
+    @GetMapping
+    public List<Ingeniero> getAllIngenieros() {
+        return ingenieroService.getAllIngeniero().get();
+    }
+
     @PostMapping
     public  Ingeniero createIngeniero(@RequestBody Ingeniero ingeniero) {
         return ingenieroService.createIngeniero(ingeniero);
