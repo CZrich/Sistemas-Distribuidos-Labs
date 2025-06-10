@@ -1,6 +1,7 @@
 package com.empresa.demo.domain.ingeniero;
 
 
+import com.empresa.demo.domain.contrato.ContratoRepository;
 import com.empresa.demo.exception.RequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,8 @@ public class IngenieroService {
     @Autowired
     private  IngenieroRepository ingenieroRepository;
 
+    @Autowired
+    private ContratoRepository contratoRepository;
 
     public  Optional<List<Ingeniero>> getAllIngeniero(){
         return  Optional.of(ingenieroRepository.findAll());
@@ -56,11 +59,16 @@ public class IngenieroService {
         if(!ingenieroRepository.existsById(id)){
             throw  new RequestException(" Ingeniero doesn't exist  with " + id + "id",HttpStatus.BAD_REQUEST);
         }
+
+        contratoRepository.deleteByIngenieroId(id);
+
         ingenieroRepository.deleteById(id);
 
         return ResponseEntity.status(HttpStatusCode.valueOf(204)).build();
 
     }
+
+
 
 
 

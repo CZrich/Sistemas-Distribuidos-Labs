@@ -51,11 +51,12 @@ public class ProyectoController {
 
     @PutMapping("/{id}")
     @Transactional
-     public ResponseEntity<Void> updateProyecto(@RequestBody Proyecto proyecto,@PathVariable Long id) {
+     public ResponseEntity<Void> updateProyecto(@RequestBody ProyectoDTO proyecto,@PathVariable Long id) {
         return proyectoService.updateProyecto(proyecto, id);
      }
 
     @DeleteMapping("/{id}")
+    @Transactional
     public ResponseEntity<Void> deleteProyecto(@PathVariable Long id) {
         return proyectoService.deleteProyecto(id);
     }

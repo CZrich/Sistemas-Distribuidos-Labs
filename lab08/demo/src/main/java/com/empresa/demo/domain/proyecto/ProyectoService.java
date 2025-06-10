@@ -1,15 +1,17 @@
 package com.empresa.demo.domain.proyecto;
 
 
+import com.empresa.demo.domain.contrato.Contrato;
 import com.empresa.demo.domain.contrato.ContratoRepository;
 import com.empresa.demo.domain.departamento.Departamento;
 import com.empresa.demo.domain.departamento.DepartementoRepository;
 import com.empresa.demo.domain.ingeniero.Ingeniero;
+import com.empresa.demo.domain.ingeniero.IngenieroRepository;
 import com.empresa.demo.exception.RequestException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -28,8 +30,11 @@ public class ProyectoService {
     @Autowired
     private DepartementoRepository departamentoRepository;
 
+    @Autowired
+    private IngenieroRepository ingenieroRepository;
+
   public Proyecto createProyecto(ProyectoDTO proyectotDto) {
-     Departamento departamento = departamentoRepository.findById(proyectotDto.getIdDep())
+       Departamento departamento = departamentoRepository.findById(proyectotDto.getIdDep())
         .orElseThrow(() -> new RequestException("Departamento no encontrado", HttpStatus.BAD_REQUEST));
 
     Proyecto proyecto = new Proyecto();
@@ -37,9 +42,22 @@ public class ProyectoService {
     proyecto.setIniFechProy(proyectotDto.getIniFechProy());
     proyecto.setTerFechProy(proyectotDto.getTerFechProy());
     proyecto.setDepartamento(departamento);
+    
+    Proyecto savedProyecto = proyectoRepository.save(proyecto);
 
-    Proyecto saved = proyectoRepository.save(proyecto);
-    return  saved;
+    for (Long idIng : proyectotDto.getIngenieroIds()) {
+        Ingeniero ing = ingenieroRepository.findById(idIng)
+            .orElseThrow(() -> new RequestException("Ingeniero no encontrado", HttpStatus.BAD_REQUEST));
+        
+        Contrato contrato = new Contrato();
+        contrato.setIngenieros(ing);
+        contrato.setProyectos(savedProyecto);
+        contrato.setStatus(true);
+        
+        contratoRepository.save(contrato);
+    }
+
+    return savedProyecto;
 }
 
     public List<Proyecto> getAllProyectos() {
@@ -55,16 +73,39 @@ public class ProyectoService {
         }
       
     }
-    public ResponseEntity<Void> updateProyecto(Proyecto proyecto, Long id){
+    public ResponseEntity<Void> updateProyecto(ProyectoDTO proyectoDto, Long id){
 
-       var project= getProyecto(id);
-       project.setNomProy(proyecto.getNomProy());
-       project.setIniFechProy(proyecto.getIniFechProy());
-       project.setTerFechProy(proyecto.getTerFechProy());
-       project.setDepartamento(proyecto.getDepartamento());
-       // proyectoRepository.save(project);
+       Proyecto proyecto = proyectoRepository.findById(id)
+        .orElseThrow(() -> new RequestException("Proyecto no encontrado", HttpStatus.NOT_FOUND));
 
-        return  ResponseEntity.status(HttpStatusCode.valueOf(204)).build();
+    Departamento departamento = departamentoRepository.findById(proyectoDto.getIdDep())
+        .orElseThrow(() -> new RequestException("Departamento no encontrado", HttpStatus.BAD_REQUEST));
+
+    // Actualizar datos del proyecto
+    proyecto.setNomProy(proyectoDto.getNomProy());
+    proyecto.setIniFechProy(proyectoDto.getIniFechProy());
+    proyecto.setTerFechProy(proyectoDto.getTerFechProy());
+    proyecto.setDepartamento(departamento);
+    
+    Proyecto savedProyecto = proyectoRepository.save(proyecto);
+
+    // Eliminar contratos anteriores
+    contratoRepository.deleteByProyectoId(savedProyecto.getIdProy());
+
+    // Crear nuevos contratos
+    for (Long idIng : proyectoDto.getIngenieroIds()) {
+        Ingeniero ing = ingenieroRepository.findById(idIng)
+            .orElseThrow(() -> new RequestException("Ingeniero no encontrado", HttpStatus.BAD_REQUEST));
+        
+        Contrato contrato = new Contrato();
+        contrato.setIngenieros(ing);
+        contrato.setProyectos(savedProyecto);
+        contrato.setStatus(true);
+        
+        contratoRepository.save(contrato);
+    }
+
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 
@@ -79,6 +120,7 @@ public class ProyectoService {
 
     public ResponseEntity<Void> deleteProyecto(Long id) {
         var proyecto = getProyecto(id);
+        contratoRepository.deleteByProyectoId(proyecto.getIdProy());
         proyectoRepository.delete(proyecto);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
