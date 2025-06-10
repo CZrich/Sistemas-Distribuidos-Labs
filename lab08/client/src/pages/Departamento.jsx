@@ -61,19 +61,19 @@ export default function DepartamentosPage() {
         className="flex flex-col gap-4 bg-white p-4 rounded shadow"
       >
         <input
-          className="border p-2 rounded"
+          className="border p-2 rounded focus:border-border border-gray-300 p-2 rounded-md w-full focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           placeholder="Nombre"
           value={form.nomDep}
           onChange={(e) => setForm({ ...form, nomDep: e.target.value })}
         />
         <input
-          className="border p-2 rounded"
+          className="border border-gray-300 p-2 rounded-md w-full focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           placeholder="Teléfono"
           value={form.telDep}
           onChange={(e) => setForm({ ...form, telDep: e.target.value })}
         />
         <input
-          className="border p-2 rounded"
+          className="border border-gray-300 p-2 rounded-md w-full focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           placeholder="Fax"
           value={form.faxDep}
           onChange={(e) => setForm({ ...form, faxDep: e.target.value })}
@@ -99,7 +99,7 @@ export default function DepartamentosPage() {
             </p>
             <div className="flex gap-2">
               <button
-                className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
+                className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
                 onClick={() => handleEdit(d)}
               >
                 Editar

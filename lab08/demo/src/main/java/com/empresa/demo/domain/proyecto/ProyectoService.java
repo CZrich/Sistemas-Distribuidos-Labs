@@ -9,6 +9,7 @@ import com.empresa.demo.domain.ingeniero.Ingeniero;
 import com.empresa.demo.domain.ingeniero.IngenieroRepository;
 import com.empresa.demo.exception.RequestException;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
@@ -109,19 +110,30 @@ public class ProyectoService {
     }
 
 
-    public  Proyecto getProyecto(Long id){
+    public  ProyectoDetailDTO getProyecto(Long id){
         Optional<Proyecto> proyectoOpt = proyectoRepository.findById(id);
+        
         if(proyectoOpt.isEmpty()){
             throw  new RequestException("project no found", HttpStatus.BAD_REQUEST);
         }
-        return  proyectoOpt.get();
+        ProyectoDetailDTO  proyectoDetailDTO = new ProyectoDetailDTO();
+         proyectoDetailDTO.setIdProy(proyectoOpt.get().getIdProy());
+        proyectoDetailDTO.setNomProy(proyectoOpt.get().getNomProy());
+        proyectoDetailDTO.setIniFechProy(proyectoOpt.get().getIniFechProy());
+        proyectoDetailDTO.setTerFechProy(proyectoOpt.get().getTerFechProy());
+        proyectoDetailDTO.setNomDep(proyectoOpt.get().getDepartamento().getNomDep());
+        return  proyectoDetailDTO;
     }
 
 
     public ResponseEntity<Void> deleteProyecto(Long id) {
-        var proyecto = getProyecto(id);
+        if (!proyectoRepository.existsById(id)) {
+            throw new RequestException("Proyecto no encontrado con ID: " + id, HttpStatus.NOT_FOUND);
+        }
+        Proyecto proyecto = proyectoRepository.findById(id)
+            .orElseThrow(() -> new RequestException("Proyecto no encontrado", HttpStatus.NOT_FOUND));
         contratoRepository.deleteByProyectoId(proyecto.getIdProy());
-        proyectoRepository.delete(proyecto);
+        proyectoRepository.deleteById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

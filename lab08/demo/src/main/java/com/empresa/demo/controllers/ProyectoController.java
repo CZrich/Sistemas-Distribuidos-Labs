@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.empresa.demo.domain.proyecto.Proyecto;
 import com.empresa.demo.domain.proyecto.ProyectoDTO;
+import com.empresa.demo.domain.proyecto.ProyectoDetailDTO;
 import com.empresa.demo.domain.proyecto.ProyectoService;
 
 import jakarta.transaction.Transactional;
@@ -45,7 +46,7 @@ public class ProyectoController {
     }
 
     @GetMapping("/{id}")
-    public Proyecto getProyecto(@PathVariable Long id) {
+    public ProyectoDetailDTO getProyecto(@PathVariable Long id) {
         return proyectoService.getProyecto(id);
     }
 

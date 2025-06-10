@@ -55,6 +55,7 @@ public class IngenieroController {
     }
 
     @DeleteMapping("/{id}")
+    @Transactional
     public void deleteIngeniero(@PathVariable Long id) {
         ingenieroService.deleteIngeniero(id);
     }

@@ -52,7 +52,7 @@ export default function IngenierosPage() {
           placeholder="Nombre"
           value={form.namIng}
           onChange={(e) => setForm({ ...form, namIng: e.target.value })}
-          className="w-full border px-3 py-2 rounded"
+          className="border border-gray-300 p-2 rounded-md w-full focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           required
         />
         <input
@@ -60,7 +60,7 @@ export default function IngenierosPage() {
           placeholder="Cargo"
           value={form.carIng}
           onChange={(e) => setForm({ ...form, carIng: e.target.value })}
-          className="w-full border px-3 py-2 rounded"
+          className="border border-gray-300 p-2 rounded-md w-full focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           required
         />
         <input
@@ -68,7 +68,7 @@ export default function IngenierosPage() {
           placeholder="Especialidad"
           value={form.espIng}
           onChange={(e) => setForm({ ...form, espIng: e.target.value })}
-          className="w-full border px-3 py-2 rounded"
+          className="border border-gray-300 p-2 rounded-md w-full focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           required
         />
         <button
@@ -90,13 +90,13 @@ export default function IngenierosPage() {
             <div className="flex flex-col gap-2">
               <button
                 onClick={() => handleEdit(i)}
-                className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
+                className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
               >
                 Editar
               </button>
               <button
                 onClick={() => handleDelete(i.idIng)}
-                className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+                className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-700"
               >
                 Eliminar
               </button>
