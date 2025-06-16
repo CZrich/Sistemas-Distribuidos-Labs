@@ -60,6 +60,7 @@ public class DepartamentoController {
 
 
     @DeleteMapping("/{id}")
+    @Transactional
     public ResponseEntity< Void > deleteDepartamento( @PathVariable Long id) {
        
         departamentoService.deleteDeparatamento(id);

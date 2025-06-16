@@ -25,6 +25,6 @@ public class Departamento {
     private String  telDep;
     private  String faxDep;
 
-    @OneToMany(mappedBy = "departamento",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "departamento",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<Proyecto> proyectos;
 }

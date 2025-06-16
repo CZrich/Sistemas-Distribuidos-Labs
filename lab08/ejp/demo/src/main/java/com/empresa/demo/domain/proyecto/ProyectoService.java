@@ -9,6 +9,7 @@ import com.empresa.demo.domain.ingeniero.Ingeniero;
 import com.empresa.demo.domain.ingeniero.IngenieroRepository;
 import com.empresa.demo.exception.RequestException;
 
+import jakarta.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -125,7 +126,7 @@ public class ProyectoService {
         return  proyectoDetailDTO;
     }
 
-
+    @Transactional
     public ResponseEntity<Void> deleteProyecto(Long id) {
         if (!proyectoRepository.existsById(id)) {
             throw new RequestException("Proyecto no encontrado con ID: " + id, HttpStatus.NOT_FOUND);

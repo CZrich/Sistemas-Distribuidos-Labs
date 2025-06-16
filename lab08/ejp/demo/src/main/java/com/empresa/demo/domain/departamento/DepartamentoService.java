@@ -1,5 +1,8 @@
 package com.empresa.demo.domain.departamento;
 
+
+import com.empresa.demo.domain.proyecto.Proyecto;
+import com.empresa.demo.domain.proyecto.ProyectoService;
 import com.empresa.demo.exception.RequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +19,8 @@ public class DepartamentoService {
     @Autowired
     private  DepartementoRepository departementoRepository;
 
-
+    @Autowired
+    private ProyectoService proyectoService;
 
     public List<Departamento> getAllDepartamentos() {
         return departementoRepository.findAll();
@@ -49,11 +53,28 @@ public class DepartamentoService {
          return  ResponseEntity.status(HttpStatusCode.valueOf(204)).build();
     }
 
+
+
     public  ResponseEntity<Void> deleteDeparatamento( Long id){
-         if(!departementoRepository.existsById(id)){
-             throw  new RequestException(" no  found with "+ id +" id",HttpStatus.BAD_REQUEST);
-         }
-          departementoRepository.deleteById(id);
-         return  ResponseEntity.status(HttpStatusCode.valueOf(204)).build();
+       if (!departementoRepository.existsById(id)) {
+        throw new RequestException("No se encontró el departamento con ID " + id, HttpStatus.BAD_REQUEST);
+    }
+
+    Departamento departamento = getDepartamento(id);
+
+    // Obtener directamente los IDs de los proyectos
+    List<Long> idProyectos = departamento.getProyectos().stream()
+            .map(Proyecto::getIdProy)
+            .toList();
+
+    // Eliminar los proyectos
+    for (Long idProy : idProyectos) {
+        proyectoService.deleteProyecto(idProy);
+    }
+
+    // Eliminar el departamento
+    departementoRepository.deleteById(id);
+
+    return ResponseEntity.noContent().build(); // equivalente a 204
     }
 }
