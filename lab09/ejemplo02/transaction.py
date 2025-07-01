@@ -1,5 +1,5 @@
 import mysql.connector
-from mysql.connector import Error
+#from mysql.connector import Error
 
 def crear_base_de_datos_y_tabla():
     try:
@@ -67,18 +67,20 @@ def realizar_transaccion():
 
             sql_insert_2 = "INSERT INTO estudiantes (nombre, apellido, edad, grado) VALUES (%s, %s, %s, %s)"
             valores_2 = ('María', 'Gómez', 14, '9no')
+            #raise Exception("Simulación de error")
             cursor.execute(sql_insert_2, valores_2)
 
             # Confirmar la transacción
             conexion.commit()
             print("Transacción completada con éxito")
 
-    except Error as e:
+    except Exception as e:
         print(f"Error: {e}")
         # Revertir la transacción en caso de error
         if conexion.is_connected():
-            conexion.rollback()
             print("Transacción revertida")
+            conexion.rollback()
+            
 
     finally:
         # Cerrar el cursor y la conexión
